@@ -1,6 +1,6 @@
 # You can use either the shiny new clang compiler, or the more traditional gcc
-COMPILER=/Developer/usr/bin/clang
-#COMPILER=gcc
+#COMPILER=/Developer/usr/bin/clang
+COMPILER=gcc
 FLAGS=-Wall -O2
 LIBRARIES=-lncurses
 
