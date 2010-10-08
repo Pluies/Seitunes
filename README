@@ -1,0 +1,13 @@
+-- Compiling --
+
+$ make
+
+-- Installing --
+
+$ sudo make install
+
+
+
+
+
+... That's all folks!
