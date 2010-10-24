@@ -106,11 +106,20 @@ int executeApplescriptToGetInt( const char* application, const char* command, in
  */
 int executeApplescript( const char* application, const char* command )
 {
-	int childExitStatus;
 	char toExec[1024];
 	sprintf(toExec, "tell application \"%s\" to %s", application, command);
+	return executeRawApplescript(toExec);
+}
+
+/* int executeRawApplescript( const char* command )
+ * Execute the raw Applescript command provided.
+ * The returned value is the return value of the call (0 if everything's alright).
+ */
+int executeRawApplescript( const char* command )
+{
+	int childExitStatus;
 	if( ! fork() )
-		execlp("osascript", "osascript", "-e", toExec, NULL);
+		execlp("osascript", "osascript", "-e", command, NULL);
 	wait( &childExitStatus );
 	return childExitStatus;
 }
@@ -246,6 +255,21 @@ void playpause()
 void nextSong()
 {
 	executeApplescript( "iTunes", "next track" );
+}
+
+/* changeSystemVolume(int n)
+ * Modifies the system volume by n%
+ */
+void changeSystemVolume(int modif)
+{
+	char command[512];
+	if (modif>=0)
+		sprintf(command, "set volume output volume (output volume of (get volume settings)) + %d", modif);
+	else{
+		modif = -modif;
+		sprintf(command, "set volume output volume (output volume of (get volume settings)) - %d", modif);
+	}
+	executeRawApplescript(command);
 }
 
 /* previousSong()

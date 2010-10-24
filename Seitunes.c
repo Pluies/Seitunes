@@ -50,7 +50,6 @@ int main( int argc, char** argv )
 	int i = 0, j = 0;
 	int gotPlaylists = 0;
 	int isInputing = 0;
-	FILE* p;
 	char artist[COLS];
 	char song[COLS];
 	char playlist[COLS];
@@ -119,7 +118,7 @@ int main( int argc, char** argv )
 		}
 		
 		if( printDocumentation )
-			printw("\n\n   Spacebar  :\tPlay/pause\n     Arrows  :\tchange song, change volume\n     0 to 5  :\tSet rating\n        +/-  :\tVolume\n          h  :\tShow help\n          r  :\tRandom (toggle shuffle)\n          p  :\tShow all playlists\n          /  :\tEnter-your-playlist prompt\n          z  :\tQuit iTunes\n          q  :\tQuit Seitunes\n");
+			printw("\n\n   Spacebar  :\tPlay/pause\n     Arrows  :\tchange song and change iTunes volume\n     0 to 5  :\tSet rating\n        +/-  :\tSystem Volume\n          h  :\tShow help\n          r  :\tRandom (toggle shuffle)\n          p  :\tShow all playlists\n          /  :\tEnter-your-playlist prompt\n          z  :\tQuit iTunes\n          q  :\tQuit Seitunes\n");
 		
 		refresh();
 		refresh = 0;
@@ -127,8 +126,8 @@ int main( int argc, char** argv )
 		
 		/* Wait for user input. */
 		
-		// Actually we're going to wait for a second then proceed to loop - halfdelay()
-		// value is in tenth of a second - if there's no input
+		// Actually we're going to wait for a second then proceed to loop anyway (halfdelay()
+		// value is in tenth of a second) if there's no input
 		input = getch();
 		
 		if( isInputing && input != ERR && input != 27 && j < COLS-1 ){
@@ -234,16 +233,24 @@ int main( int argc, char** argv )
 				setRating(5); rating = 5;
 				break;
 				
-				
-			/* Volume up */
-			case KEY_UP:
+			
+			/* System volume up */				
 			case '+':
+				changeSystemVolume(+5);
+				break;
+			
+			/* System volume down*/
+			case '-':
+				changeSystemVolume(-5);
+				break;
+
+			/* iTunes volume up */
+			case KEY_UP:
 				volume = changeVolume(volume, +10);
 				break;
 			
-			/* Volume down */
+			/* iTunes volume down */
 			case KEY_DOWN:
-			case '-':
 				volume = changeVolume(volume, -10);
 				break;
 				

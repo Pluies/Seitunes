@@ -58,10 +58,12 @@ void playInPlaylist( const char* newPlaylist );
 void playpause();
 void previousSong();
 void nextSong();
+void changeSystemVolume(int n);
 void setShuffle(int boolShuffle);
 void startiTunes();
 void quitiTunes();
 
+int executeRawApplescript( const char* command );
 int executeApplescript( const char* application, const char* command );
 int executeApplescriptToGetString( const char* application, const char* command, char* result );
 int executeApplescriptToGetInt( const char* application, const char* command, int* result );
