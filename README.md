@@ -18,5 +18,6 @@ Starting
 $ Seitunes
 
 
-
 ... That's all folks!
+
+More documentation is available in Seitunes itself, just type 'h' to list all available commands.
