@@ -52,8 +52,10 @@ int main( int argc, char** argv )
 	int isInputing = 0;
 	char artist[COLS];
 	char song[COLS];
+	char album[COLS];
 	char playlist[COLS];
 	char newPlaylistName[COLS];
+	char stateStr[COLS];
 	char* playlists = NULL;
 	
 	newPlaylistName[0] = '\0';
@@ -78,6 +80,11 @@ int main( int argc, char** argv )
 				shuffle = getShuffle();
 				getSongName( song );
 				getArtistName( artist );
+				if(strcmp("", artist) == 0)
+					strcpy(artist, "Unknown artist");
+				getAlbumName( album );
+				if(strcmp("", album) == 0)
+					strcpy(album, "Unknown album");
 				rating = getRating( );
 			}
 			decay = 0;
@@ -96,19 +103,21 @@ int main( int argc, char** argv )
 			printw("\niTunes is stopped. Press 'l' to play a song from your Music library.");
 		else {
 			if( state == sei_PAUSED )
-				printw("\n%s - %s (paused, vol %d)", artist, song, volume);
+				strcpy(stateStr, "paused");
 			if( state == sei_STOPPED_ON_SONG )
-				printw("\n%s - %s (stopped, vol %d)", artist, song, volume);
+				strcpy(stateStr, "stopped");
 			if( state == sei_PLAYING )
-				printw("\n%s - %s (playing, vol %d)", artist, song, volume);
+				strcpy(stateStr, "playing");
 
+			printw("\n%s\n%s - %s (%s, vol %d)", song, artist, album, stateStr, volume);
+		
 			printw("\nRating: ");
 			for( i=0 ; i<rating ; i++) printw("*");
 			for( ; i<5 ; i++) printw(".");
 			
-			printw("\nPlaylist: %s, ", playlist );
-			if( shuffle ) printw("shuffle" );
-			else printw("no shuffle" );
+			printw(" | Playlist: %s | ", playlist );
+			if( shuffle ) printw("Shuffle" );
+			else printw("No shuffle" );
 			
 			if ( isInputing )
 				printw("\n\nEnter (part of) the name of the playlist:\n%s", newPlaylistName);
@@ -121,6 +130,7 @@ int main( int argc, char** argv )
 			printw("\n\n   Spacebar  :\tPlay/pause\n     Arrows  :\tchange song and change iTunes volume\n     0 to 5  :\tSet rating\n        +/-  :\tSystem Volume\n          h  :\tShow help\n          r  :\tRandom (toggle shuffle)\n          p  :\tShow all playlists\n          /  :\tEnter-your-playlist prompt\n          z  :\tQuit iTunes\n          q  :\tQuit Seitunes\n");
 		
 		refresh();
+
 		refresh = 0;
 
 		
@@ -200,8 +210,8 @@ int main( int argc, char** argv )
 				break;
 				
 			/* Help */
-			case 'h':  // 'h' key
-			case 'H':  // 'H' key
+			case 'h':
+			case 'H':
 				printDocumentation = !printDocumentation;
 				break;
 				
@@ -305,7 +315,7 @@ int main( int argc, char** argv )
 						refresh = 1;
 						decay = 0;
 					}
-				}					
+				}
 				break;
 			
 			default:

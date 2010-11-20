@@ -48,6 +48,7 @@ int getiTunesState();
 char* getPlaylistsNames();
 int getSongName( char* name );
 int getArtistName( char* name );
+int getAlbumName( char* name );
 int getVolume();
 int getShuffle();
 int getCurrentPlaylist( char* name );

@@ -68,6 +68,16 @@ int getSongName( char* name )
 	return strlen(name);
 }
 
+/* int getAlbumName( char* name)
+ * Puts the Album name into the char* passed as argument
+ * and returns that string's length.
+ */
+int getAlbumName( char* name )
+{
+	executeApplescriptToGetString("iTunes", "album of current track as string", name);
+	return strlen(name);
+}
+
 /* int executeApplescriptToGetString( const char* application, const char* command, char* result )
  * Tells application "application" to "command", and stores the result in result as a string.
  * No more than COLS characters will be written.
