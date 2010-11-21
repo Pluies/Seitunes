@@ -57,7 +57,6 @@ int main( int argc, char** argv )
 	int input = 0;
 	int refresh = 1;
 	int printDocumentation = 0;
-	int printPlaylists = 0;
 	int volume = 0;
 	int state = 0;
 	int shuffle = 0;
@@ -130,7 +129,7 @@ int main( int argc, char** argv )
 		}
 		
 		if( printDocumentation )
-			printw("\n\n   Spacebar  :\tPlay/pause\n     Arrows  :\tchange song and change iTunes volume\n     0 to 5  :\tSet rating\n        +/-  :\tSystem Volume\n          h  :\tShow help\n          r  :\tRandom (toggle shuffle)\n          p  :\tShow all playlists\n          z  :\tQuit iTunes\n          q  :\tQuit Seitunes\n");
+			printw("\n\n   Spacebar  :\tPlay/pause\n     Arrows  :\tchange song and change iTunes volume\n     0 to 5  :\tSet rating\n        +/-  :\tSystem Volume\n          h  :\tShow help\n          r  :\tRandom (toggle shuffle)\n          z  :\tQuit iTunes\n          q  :\tQuit Seitunes\n");
 		
 		refresh();
 
@@ -176,12 +175,6 @@ int main( int argc, char** argv )
 				playpause();
 				break;
 
-			/* Print Playlists */
-			case 'P':
-			case 'p':
-				printPlaylists = !printPlaylists;
-				break;
-			
 			/* Shuffle */
 			case 'R':
 			case 'r':
