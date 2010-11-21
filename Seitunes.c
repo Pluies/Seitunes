@@ -25,6 +25,12 @@
 #include "Seitunes.h"
 
 
+void printw_color(char* str, int color){
+	attron(COLOR_PAIR(color));
+	printw(str);
+	attroff(COLOR_PAIR(color));
+}
+
 int main( int argc, char** argv )
 {
 	// Curses initialization
@@ -32,9 +38,19 @@ int main( int argc, char** argv )
 	nocbreak();
 	noecho();
 	nonl();
+	start_color();
 	intrflush(stdscr, TRUE);
 	keypad(stdscr, TRUE);
 	halfdelay(10);
+	// Curses colors
+	use_default_colors();
+	init_color(COLOR_CYAN, 750, 700,750);
+	init_pair(1, COLOR_RED, -1);
+	init_pair(2, COLOR_YELLOW, -1);
+	init_pair(3, COLOR_GREEN, -1);
+	init_pair(4, COLOR_MAGENTA, -1);
+	init_pair(5, COLOR_BLUE, -1);
+	init_pair(6, COLOR_CYAN, -1);
 	
 	// Variables initialization
 	int end = 0;
@@ -47,7 +63,8 @@ int main( int argc, char** argv )
 	int shuffle = 0;
 	int rating = 0;
 	int decay = 0;
-	int i = 0, j = 0;
+	//int i = 0;
+	int j = 0;
 	int gotPlaylists = 0;
 	int isInputing = 0;
 	char artist[COLS];
@@ -98,24 +115,33 @@ int main( int argc, char** argv )
 		
 		// Print data
 		if( state == sei_NOT_RUNNING )
-			printw("\niTunes is not running. Press 's' to Start iTunes.");
+			printw_color("\niTunes is not running. Press 's' to Start iTunes.", 1);
 		else if( state == sei_STOPPED_ON_NOTHING )
-			printw("\niTunes is stopped. Press 'l' to play a song from your Music library.");
+			printw_color("\niTunes is stopped. Press 'l' to play a song from your Music library.", 2);
 		else {
-			if( state == sei_PAUSED )
-				strcpy(stateStr, "paused");
-			if( state == sei_STOPPED_ON_SONG )
-				strcpy(stateStr, "stopped");
-			if( state == sei_PLAYING )
-				strcpy(stateStr, "playing");
+			printw("\n%s", song);
+			printw("\n%s", artist);
+			printw(" - ");
+			printw("%s", album);
 
-			printw("\n%s\n%s - %s (%s, vol %d)", song, artist, album, stateStr, volume);
-		
-			printw("\nRating: ");
+			if( state == sei_PAUSED )
+				printw_color("\nPaused", 2);
+			if( state == sei_STOPPED_ON_SONG )
+				printw_color("\nStopped", 1);
+			if( state == sei_PLAYING )
+				printw_color("\nPlaying", 3);
+
+			printw(", vol ");
+			printw("%d", volume);
+
+			/* TODO: determine if rating is important or not
+			printw("Rating: ");
 			for( i=0 ; i<rating ; i++) printw("*");
 			for( ; i<5 ; i++) printw(".");
+			*/
 			
-			printw(" | Playlist: %s | ", playlist );
+			printw(" | Playlist:");
+			printw(" %s | ",playlist );
 			if( shuffle ) printw("Shuffle" );
 			else printw("No shuffle" );
 			
