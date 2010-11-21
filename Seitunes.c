@@ -63,7 +63,7 @@ int main( int argc, char** argv )
 	int shuffle = 0;
 	int rating = 0;
 	int decay = 0;
-	//int i = 0;
+	int i = 0;
 	int j = 0;
 	int gotPlaylists = 0;
 	int isInputing = 0;
@@ -72,7 +72,6 @@ int main( int argc, char** argv )
 	char album[COLS];
 	char playlist[COLS];
 	char newPlaylistName[COLS];
-	char stateStr[COLS];
 	char* playlists = NULL;
 	
 	newPlaylistName[0] = '\0';
@@ -134,11 +133,9 @@ int main( int argc, char** argv )
 			printw(", vol ");
 			printw("%d", volume);
 
-			/* TODO: determine if rating is important or not
-			printw("Rating: ");
+			printw(" | Rating: ");
 			for( i=0 ; i<rating ; i++) printw("*");
 			for( ; i<5 ; i++) printw(".");
-			*/
 			
 			printw(" | Playlist:");
 			printw(" %s | ",playlist );
