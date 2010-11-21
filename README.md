@@ -1,21 +1,21 @@
 Compiling
 ---------
 
-$ make
+	$ make
 
 You can also compile using clang if you have developer tools installed; just edit the makefile.
 
 Installing
 ----------
 
-$ sudo make install
+	$ sudo make install
 
 Installs the Seitunes executable inside /usr/bin (which is in your path)
 
 Starting
 --------
 
-$ Seitunes
+	$ Seitunes
 
 
 ... That's all folks!
