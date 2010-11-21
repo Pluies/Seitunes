@@ -63,18 +63,9 @@ int main( int argc, char** argv )
 	int shuffle = 0;
 	int rating = 0;
 	int decay = 0;
-	int i = 0;
-	int j = 0;
-	int gotPlaylists = 0;
-	int isInputing = 0;
 	char artist[COLS];
 	char song[COLS];
 	char album[COLS];
-	char playlist[COLS];
-	char newPlaylistName[COLS];
-	char* playlists = NULL;
-	
-	newPlaylistName[0] = '\0';
 	
 	/* Main loop : printing data and waiting for user input */
 	while( !end ){
@@ -86,12 +77,7 @@ int main( int argc, char** argv )
 			printw("Error: can't retrieve iTunes state!");
 		}
 		if( (state != sei_NOT_RUNNING) && (refresh == 1) ){
-			if( !gotPlaylists ){
-				playlists = getPlaylistsNames();
-				gotPlaylists = 1;
-			}
 			volume = getVolume();
-			getCurrentPlaylist( playlist );
 			if( state != sei_STOPPED_ON_NOTHING ){
 				shuffle = getShuffle();
 				getSongName( song );
@@ -101,7 +87,6 @@ int main( int argc, char** argv )
 				getAlbumName( album );
 				if(strcmp("", album) == 0)
 					strcpy(album, "Unknown album");
-				rating = getRating( );
 			}
 			decay = 0;
 		}
@@ -118,39 +103,34 @@ int main( int argc, char** argv )
 		else if( state == sei_STOPPED_ON_NOTHING )
 			printw_color("\niTunes is stopped. Press 'l' to play a song from your Music library.", 2);
 		else {
-			printw("\n%s", song);
-			printw("\n%s", artist);
+			printw("\n%s\n", song);
+			if( strcmp(artist, "Unknown artist") == 0)
+				printw_color(artist, 2);
+			else
+				printw("%s", artist);
 			printw(" - ");
-			printw("%s", album);
+			if( strcmp(album, "Unknown album") == 0 )
+				printw_color(album, 2);
+			else
+				printw("%s", album);
 
+			printw("\n\n");
 			if( state == sei_PAUSED )
-				printw_color("\nPaused", 2);
+				printw_color("Paused", 2);
 			if( state == sei_STOPPED_ON_SONG )
-				printw_color("\nStopped", 1);
+				printw_color("Stopped", 1);
 			if( state == sei_PLAYING )
-				printw_color("\nPlaying", 3);
+				printw_color("Playing", 3);
 
 			printw(", vol ");
-			printw("%d", volume);
+			printw("%d | ", volume);
 
-			printw(" | Rating: ");
-			for( i=0 ; i<rating ; i++) printw("*");
-			for( ; i<5 ; i++) printw(".");
-			
-			printw(" | Playlist:");
-			printw(" %s | ",playlist );
 			if( shuffle ) printw("Shuffle" );
 			else printw("No shuffle" );
-			
-			if ( isInputing )
-				printw("\n\nEnter (part of) the name of the playlist:\n%s", newPlaylistName);
-			
-			if ( printPlaylists )
-				printw("\n\nAvailable playlists: %s", playlists);
 		}
 		
 		if( printDocumentation )
-			printw("\n\n   Spacebar  :\tPlay/pause\n     Arrows  :\tchange song and change iTunes volume\n     0 to 5  :\tSet rating\n        +/-  :\tSystem Volume\n          h  :\tShow help\n          r  :\tRandom (toggle shuffle)\n          p  :\tShow all playlists\n          /  :\tEnter-your-playlist prompt\n          z  :\tQuit iTunes\n          q  :\tQuit Seitunes\n");
+			printw("\n\n   Spacebar  :\tPlay/pause\n     Arrows  :\tchange song and change iTunes volume\n     0 to 5  :\tSet rating\n        +/-  :\tSystem Volume\n          h  :\tShow help\n          r  :\tRandom (toggle shuffle)\n          p  :\tShow all playlists\n          z  :\tQuit iTunes\n          q  :\tQuit Seitunes\n");
 		
 		refresh();
 
@@ -163,27 +143,7 @@ int main( int argc, char** argv )
 		// value is in tenth of a second) if there's no input
 		input = getch();
 		
-		if( isInputing && input != ERR && input != 27 && j < COLS-1 ){
-			if( input != '/' && input != 13 ){ // 13 being the enter key
-				newPlaylistName[j++] = input;
-				newPlaylistName[j] = '\0';
-				continue;
-			}
-		}
-		
 		switch ( input ) {
-			
-			case 13 :
-			case '/':
-				if( !isInputing )
-					isInputing = 1;
-				else {
-					playInPlaylist( newPlaylistName );
-					isInputing = 0;
-					j = 0;
-					refresh = 1;
-				}
-				break;
 			
 			/* Launch iTunes */
 			case 'S':
@@ -306,11 +266,6 @@ int main( int argc, char** argv )
 							break;
 					}
 				else {
-					if ( isInputing ) {
-						isInputing = 0;
-						j = 0;
-						continue;
-					}
 					endwin();
 					return 0;
 				}
@@ -348,8 +303,6 @@ int main( int argc, char** argv )
 	}
 	
 	endwin();
-	
-	if( gotPlaylists ) free( playlists );
 	
 	return 0;
 }
