@@ -224,7 +224,7 @@ int changeVolume( int currentVolume, int variation )
 	if( newVolume < 0 )
 		newVolume = 0;
 	sprintf(command, "set sound volume to %3d", newVolume);
-	executeApplescript( "iTunes", command );
+	executeApplescriptAsync( "iTunes", command );
 	return newVolume;
 }
 
@@ -249,7 +249,7 @@ void setRating( int rating )
 	rating = (rating % 6); // We make sure the input is correctly between 0 and 5
 	rating = 20 * rating; // Then we multiply by 20: actual internal ratings in iTunes range from 0 to 100
 	sprintf(command, "set rating of current track to %3d", rating);
-	executeApplescript( "iTunes", command );
+	executeApplescriptAsync( "iTunes", command );
 }
 
 /* playInPlaylist( const char* newPlaylist )
@@ -276,7 +276,7 @@ void playInPlaylist( const char* newPlaylist )
  */
 void playpause()
 {
-	executeApplescript("iTunes", "playpause" );
+	executeApplescriptAsync("iTunes", "playpause" );
 }
 
 /* nextSong()
@@ -284,7 +284,7 @@ void playpause()
  */
 void nextSong()
 {
-	executeApplescript( "iTunes", "next track" );
+	executeApplescriptAsync( "iTunes", "next track" );
 }
 
 /* changeSystemVolume(int n)
@@ -310,7 +310,7 @@ void changeSystemVolume(int modif)
  */
 void previousSong()
 {
-	executeApplescript( "iTunes", "back track" );
+	executeApplescriptAsync( "iTunes", "back track" );
 }
 
 /* setShuffle(int boolShuffle)
@@ -320,9 +320,9 @@ void previousSong()
 void setShuffle(int boolShuffle)
 {
 	if( boolShuffle )
-		executeApplescript( "iTunes", "set shuffle of current playlist to true" );	
+		executeApplescriptAsync( "iTunes", "set shuffle of current playlist to true" );	
 	else
-		executeApplescript( "iTunes", "set shuffle of current playlist to false" );	
+		executeApplescriptAsync( "iTunes", "set shuffle of current playlist to false" );	
 }
 
 /* startiTunes()

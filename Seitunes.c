@@ -72,7 +72,8 @@ int main( int argc, char** argv )
 		/* Gathering data on current state, current artist and current track */
 
 		now = time(NULL);
-		if( difftime(now, lastRefresh) > 5 ){ // Full refresh every 2 seconds
+		if( refresh || difftime(now, lastRefresh) > 4 ){
+			// Refreshes if forced, or at least every 4 seconds
 			state = getiTunesState();
 			if ( state == sei_ERROR ) {
 				printw("Error: can't retrieve iTunes state!");
@@ -90,7 +91,8 @@ int main( int argc, char** argv )
 						strcpy(album, "Unknown album");
 				}
 			}
-			lastRefresh = time(NULL);			
+			refresh = 0;
+			lastRefresh = time(NULL);
 		}
 
 		clearok(stdscr, true);
@@ -176,9 +178,11 @@ int main( int argc, char** argv )
 			/* Play / Pause */
 			case ' ':  // Space key
 				playpause();
+				if( state == sei_PAUSED) state = sei_PLAYING;
+				else if( state == sei_PLAYING) state = sei_PAUSED;
 				break;
 
-			/* Shuffle */
+			/* Shuffle (R is for random) */
 			case 'R':
 			case 'r':
 				if( shuffle )
@@ -275,8 +279,6 @@ int main( int argc, char** argv )
 			
 			/* Nothing entered */
 			case ERR:
-				if( (state == sei_PAUSED) || (state == sei_STOPPED_ON_SONG) || (state == sei_STOPPED_ON_NOTHING) )
-					usleep(5000); // Let's get a bit of rest while we're at it.
 				break;
 			
 			default:
