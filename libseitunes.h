@@ -65,7 +65,9 @@ void startiTunes();
 void quitiTunes();
 
 int executeRawApplescript( const char* command );
+void executeRawApplescriptAsync( const char* command );
 int executeApplescript( const char* application, const char* command );
+void executeApplescriptAsync( const char* application, const char* command );
 int executeApplescriptToGetString( const char* application, const char* command, char* result );
 int executeApplescriptToGetInt( const char* application, const char* command, int* result );
 

@@ -58,38 +58,41 @@ int main( int argc, char** argv )
 	int refresh = 1;
 	int printDocumentation = 0;
 	int volume = 0;
-	int state = 0;
+	int state = getiTunesState();
 	int shuffle = 0;
 	int rating = 0;
-	int decay = 0;
+	time_t lastRefresh = 0, now;
 	char artist[COLS];
 	char song[COLS];
 	char album[COLS];
 	
 	/* Main loop : printing data and waiting for user input */
 	while( !end ){
-		
+
 		/* Gathering data on current state, current artist and current track */
-		
-		state = getiTunesState();
-		if ( state == sei_ERROR ) {
-			printw("Error: can't retrieve iTunes state!");
-		}
-		if( (state != sei_NOT_RUNNING) && (refresh == 1) ){
-			volume = getVolume();
-			if( state != sei_STOPPED_ON_NOTHING ){
-				shuffle = getShuffle();
-				getSongName( song );
-				getArtistName( artist );
-				if(strcmp("", artist) == 0)
-					strcpy(artist, "Unknown artist");
-				getAlbumName( album );
-				if(strcmp("", album) == 0)
-					strcpy(album, "Unknown album");
+
+		now = time(NULL);
+		if( difftime(now, lastRefresh) > 5 ){ // Full refresh every 2 seconds
+			state = getiTunesState();
+			if ( state == sei_ERROR ) {
+				printw("Error: can't retrieve iTunes state!");
 			}
-			decay = 0;
+			if( state != sei_NOT_RUNNING ){
+				volume = getVolume();
+				if( state != sei_STOPPED_ON_NOTHING ){
+					shuffle = getShuffle();
+					getSongName( song );
+					getArtistName( artist );
+					if(strcmp("", artist) == 0)
+						strcpy(artist, "Unknown artist");
+					getAlbumName( album );
+					if(strcmp("", album) == 0)
+						strcpy(album, "Unknown album");
+				}
+			}
+			lastRefresh = time(NULL);			
 		}
-		
+
 		clearok(stdscr, true);
 		erase();
 
@@ -272,21 +275,8 @@ int main( int argc, char** argv )
 			
 			/* Nothing entered */
 			case ERR:
-				if( (state == sei_PAUSED) || (state == sei_STOPPED_ON_SONG) || (state == sei_STOPPED_ON_NOTHING) ){
-					refresh = 0; // If the player is paused or stopped, we don't need to get information at all
-					usleep(50000); // Let's get a bit of rest while we're at it.
-				}
-				else{
-					refresh = 0;
-					// Problem is: when we don't refresh, we're at risk to have outdated information.
-					// The decay value is here to counter that: after 3 seconds (halfdelay is 1 second)
-					// without new input (getch() ERR case), we refresh the values anyway.
-					decay += 1;
-					if( decay > 3 ){
-						refresh = 1;
-						decay = 0;
-					}
-				}
+				if( (state == sei_PAUSED) || (state == sei_STOPPED_ON_SONG) || (state == sei_STOPPED_ON_NOTHING) )
+					usleep(5000); // Let's get a bit of rest while we're at it.
 				break;
 			
 			default:

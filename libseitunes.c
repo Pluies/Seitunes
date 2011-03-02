@@ -121,6 +121,16 @@ int executeApplescript( const char* application, const char* command )
 	return executeRawApplescript(toExec);
 }
 
+/* int executeApplescriptAsync( const char* application, const char* command )
+ * Asynchronously tells application "application" to "command", without considering the stdout.
+ */
+void executeApplescriptAsync( const char* application, const char* command )
+{
+	char toExec[1024];
+	sprintf(toExec, "tell application \"%s\" to %s", application, command);
+	executeRawApplescriptAsync(toExec);
+}
+
 /* int executeRawApplescript( const char* command )
  * Execute the raw Applescript command provided.
  * The returned value is the return value of the call (0 if everything's alright).
@@ -132,6 +142,16 @@ int executeRawApplescript( const char* command )
 		execlp("osascript", "osascript", "-e", command, NULL);
 	wait( &childExitStatus );
 	return childExitStatus;
+}
+
+/* int executeRawApplescriptAsync( const char* command )
+ * Execute the provided Applescript command without waiting
+ * for a response.
+ */
+void executeRawApplescriptAsync( const char* command )
+{
+	if( ! fork() )
+		execlp("osascript", "osascript", "-e", command, NULL);
 }
 
 /* char* getPlaylistsNames( )
@@ -279,7 +299,7 @@ void changeSystemVolume(int modif)
 		modif = -modif;
 		sprintf(command, "set volume output volume (output volume of (get volume settings)) - %d", modif);
 	}
-	executeRawApplescript(command);
+	executeRawApplescriptAsync(command);
 }
 
 /* previousSong()
