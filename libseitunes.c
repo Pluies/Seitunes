@@ -78,82 +78,6 @@ int getAlbumName( char* name )
 	return strlen(name);
 }
 
-/* int executeApplescriptToGetString( const char* application, const char* command, char* result )
- * Tells application "application" to "command", and stores the result in result as a string.
- * No more than COLS characters will be written.
- * The returned value is the result length.
- */
-int executeApplescriptToGetString( const char* application, const char* command, char* result )
-{
-	FILE* p;
-	int resultSize = 0;
-	char toExec[1024];
-	sprintf(toExec, "osascript -e 'tell application \"%s\" to %s'", application, command);
-	p = popen( toExec, "r");
-	if( fgets( result, COLS, p ) != NULL ){
-		resultSize = strlen(result)-1;
-		result[ resultSize ] = '\0';
-	}
-	pclose(p);
-	return resultSize;
-}
-
-/* int executeApplescriptToGetInt( const char* application, const char* command, char* result )
- * Tells application "application" to "command", and stores the result in result as an int.
- * The returned value is the result length.
- */
-int executeApplescriptToGetInt( const char* application, const char* command, int* result )
-{
-	char resultString[COLS];
-	int returnValue = executeApplescriptToGetString(application, command, resultString);
-	*result = atoi( resultString );
-	return returnValue;
-}
-
-/* int executeApplescript( const char* application, const char* command )
- * Tells application "application" to "command", without considering the stdout.
- * The returned value is the return value of the call (0 if everything's alright).
- */
-int executeApplescript( const char* application, const char* command )
-{
-	char toExec[1024];
-	sprintf(toExec, "tell application \"%s\" to %s", application, command);
-	return executeRawApplescript(toExec);
-}
-
-/* int executeApplescriptAsync( const char* application, const char* command )
- * Asynchronously tells application "application" to "command", without considering the stdout.
- */
-void executeApplescriptAsync( const char* application, const char* command )
-{
-	char toExec[1024];
-	sprintf(toExec, "tell application \"%s\" to %s", application, command);
-	executeRawApplescriptAsync(toExec);
-}
-
-/* int executeRawApplescript( const char* command )
- * Execute the raw Applescript command provided.
- * The returned value is the return value of the call (0 if everything's alright).
- */
-int executeRawApplescript( const char* command )
-{
-	int childExitStatus;
-	if( ! fork() )
-		execlp("osascript", "osascript", "-e", command, NULL);
-	wait( &childExitStatus );
-	return childExitStatus;
-}
-
-/* int executeRawApplescriptAsync( const char* command )
- * Execute the provided Applescript command without waiting
- * for a response.
- */
-void executeRawApplescriptAsync( const char* command )
-{
-	if( ! fork() )
-		execlp("osascript", "osascript", "-e", command, NULL);
-}
-
 /* char* getPlaylistsNames( )
  * Puts all the playlists into a dynamically allocated string returned.
  */
@@ -339,4 +263,85 @@ void startiTunes()
 void quitiTunes()
 {
 	executeApplescript("iTunes", "quit" );
+}
+
+
+
+
+/* Helper functions */
+
+/* int executeApplescriptToGetString( const char* application, const char* command, char* result )
+ * Tells application "application" to "command", and stores the result in result as a string.
+ * No more than COLS characters will be written.
+ * The returned value is the result length.
+ */
+int executeApplescriptToGetString( const char* application, const char* command, char* result )
+{
+	FILE* p;
+	int resultSize = 0;
+	char toExec[1024];
+	sprintf(toExec, "osascript -e 'tell application \"%s\" to %s'", application, command);
+	p = popen( toExec, "r");
+	if( fgets( result, COLS, p ) != NULL ){
+		resultSize = strlen(result)-1;
+		result[ resultSize ] = '\0';
+	}
+	pclose(p);
+	return resultSize;
+}
+
+/* int executeApplescriptToGetInt( const char* application, const char* command, char* result )
+ * Tells application "application" to "command", and stores the result in result as an int.
+ * The returned value is the result length.
+ */
+int executeApplescriptToGetInt( const char* application, const char* command, int* result )
+{
+	char resultString[COLS];
+	int returnValue = executeApplescriptToGetString(application, command, resultString);
+	*result = atoi( resultString );
+	return returnValue;
+}
+
+/* int executeApplescript( const char* application, const char* command )
+ * Tells application "application" to "command", without considering the stdout.
+ * The returned value is the return value of the call (0 if everything's alright).
+ */
+int executeApplescript( const char* application, const char* command )
+{
+	char toExec[1024];
+	sprintf(toExec, "tell application \"%s\" to %s", application, command);
+	return executeRawApplescript(toExec);
+}
+
+/* int executeApplescriptAsync( const char* application, const char* command )
+ * Asynchronously tells application "application" to "command", without considering the stdout.
+ */
+void executeApplescriptAsync( const char* application, const char* command )
+{
+	char toExec[1024];
+	sprintf(toExec, "tell application \"%s\" to %s", application, command);
+	executeRawApplescriptAsync(toExec);
+}
+
+/* int executeRawApplescript( const char* command )
+ * Execute the raw Applescript command provided.
+ * The returned value is the return value of the call (0 if everything's alright).
+ */
+int executeRawApplescript( const char* command )
+{
+	int childExitStatus;
+	if( ! fork() )
+		execlp("osascript", "osascript", "-e", command, NULL);
+	wait( &childExitStatus );
+	return childExitStatus;
+}
+
+/* int executeRawApplescriptAsync( const char* command )
+ * Execute the provided Applescript command without waiting
+ * for a response.
+ */
+void executeRawApplescriptAsync( const char* command )
+{
+	if( ! fork() )
+		execlp("osascript", "osascript", "-e", command, NULL);
 }
