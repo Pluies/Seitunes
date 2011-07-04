@@ -30,7 +30,7 @@
 
 /* int getiTunesState( )
  * Returns an integer that shows the state iTunes is in.
- * States are coded as integers, defined in Seitunes.h
+ * States are coded as integers, defined in libseitunes.h
  */
 int getiTunesState()
 {
