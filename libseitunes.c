@@ -118,7 +118,7 @@ int getShuffle()
 {
 	int shuffle = 0;
 	char result[COLS];
-	executeApplescriptToGetString("iTunes", "shuffle of current playlist as string", result);
+	executeApplescriptFileToGetString("isShuffleOn.scpt", result);
 	if( strncmp( "true", result, 4 ) == 0 )
 		shuffle = 1;
 	return shuffle;
@@ -243,10 +243,11 @@ void previousSong()
  */
 void setShuffle(int boolShuffle)
 {
+	char result[COLS]; // unused
 	if( boolShuffle )
-		executeApplescriptAsync( "iTunes", "set shuffle of current playlist to true" );	
+		executeApplescriptFileToGetString( "setShuffleOn.scpt", result );
 	else
-		executeApplescriptAsync( "iTunes", "set shuffle of current playlist to false" );	
+		executeApplescriptFileToGetString( "setShuffleOff.scpt", result );
 }
 
 /* startiTunes()
@@ -281,6 +282,26 @@ int executeApplescriptToGetString( const char* application, const char* command,
 	int resultSize = 0;
 	char toExec[1024];
 	sprintf(toExec, "osascript -e 'tell application \"%s\" to %s'", application, command);
+	p = popen( toExec, "r");
+	if( fgets( result, COLS, p ) != NULL ){
+		resultSize = strlen(result)-1;
+		result[ resultSize ] = '\0';
+	}
+	pclose(p);
+	return resultSize;
+}
+
+/* int executeApplescriptFileToGetString( const char* command, char* result )
+ * Executes the applescript file `command` and stores the result in result as a string.
+ * No more than COLS characters will be written.
+ * The returned value is the result length.
+ */
+int executeApplescriptFileToGetString( const char* command, char* result )
+{
+	FILE* p;
+	int resultSize = 0;
+	char toExec[1024];
+	sprintf(toExec, "osascript %s", command);
 	p = popen( toExec, "r");
 	if( fgets( result, COLS, p ) != NULL ){
 		resultSize = strlen(result)-1;
