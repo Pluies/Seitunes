@@ -118,7 +118,7 @@ int getShuffle()
 {
 	int shuffle = 0;
 	char result[COLS];
-	executeApplescriptFileToGetString("isShuffleOn.scpt", result);
+	executeApplescriptFileToGetString("~/.seitunes/isShuffleOn.scpt", result);
 	if( strncmp( "true", result, 4 ) == 0 )
 		shuffle = 1;
 	return shuffle;
@@ -245,9 +245,9 @@ void setShuffle(int boolShuffle)
 {
 	char result[COLS]; // unused
 	if( boolShuffle )
-		executeApplescriptFileToGetString( "setShuffleOn.scpt", result );
+		executeApplescriptFileToGetString( "~/.seitunes/setShuffleOn.scpt", result );
 	else
-		executeApplescriptFileToGetString( "setShuffleOff.scpt", result );
+		executeApplescriptFileToGetString( "~/.seitunes/setShuffleOff.scpt", result );
 }
 
 /* startiTunes()
