@@ -23,9 +23,16 @@ Installing
 
 	$ sudo make install
 
-Installs the Seitunes executable inside /usr/bin (which is in your path)
+Installs the Seitunes executable inside /usr/bin (which is in your path), and extra scripts inside ~/.seitunes
 
-Known issue - "shuffle" will be broken as the osascript files won't be moved in the correct place. Merge requests welcome :)
+NB: the "Shuffle" functionality uses the Accessibility functionality in OS X in order to work - it drives the menus rather than use the iTunes Applescript APIs, because as it turns out, Apple never fixed the Applescript API after changing the Shuffle functionality from an on/off switch to the current Song / Album / Grouping functionality.
+
+Uninstalling
+----------
+
+	$ sudo make uninstall
+
+Deletes Seitunes files from your system.
 
 Starting
 --------

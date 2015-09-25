@@ -21,6 +21,8 @@ Seitunes.o:Seitunes.c
 libseitunes.o:libseitunes.c
 	$(COMPILER) $(FLAGS) -c libseitunes.c -o libseitunes.o
 
-install:
-	mkdir ~/.seitunes/ && cp *.scpt ~/.seitunes/ && cp Seitunes /usr/bin;
+install: Seitunes
+	mkdir -p ~/.seitunes/ && cp *.scpt ~/.seitunes/ && cp Seitunes /usr/bin;
 
+uninstall:
+	rm -f /usr/bin/Seitunes && rm -rf ~/.seitunes
